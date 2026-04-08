@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>La Esquina — Comida Callejera Premium</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+
+<!-- Background -->
+<div id="bg-layer"></div>
+<div id="bg-overlay"></div>
+
+<div id="app">
+
+  <!-- ══════════════════════════════════════════
+       INICIO
+  ══════════════════════════════════════════ -->
+  <section id="home" class="page active">
+    <div class="home-header">
+      <h1 class="logo">LA <em>Esquina</em></h1>
+      <p class="subtitle">Comida Callejera Premium</p>
+    </div>
+
+    <!-- Hero Banner -->
+    <div class="hero-banner glass">
+      <div class="hero-text">
+        <span class="tag">🔥 Exclusivos Nocturnos</span>
+        <h2>EL MEJOR<br>STREET FOOD.</h2>
+        <button class="btn-primary" onclick="scrollToMenu()">Ver Menú</button>
+      </div>
+      <div class="hero-foods">
+        <div class="hero-food">🍔</div>
+        <div class="hero-food">🌭</div>
+      </div>
+    </div>
+
+    <!-- Category Pills -->
+    <div class="cat-scroll" id="cat-pills"></div>
+
+    <!-- Section label -->
+    <div class="section-label" id="section-label">Menú Completo</div>
+
+    <!-- Product Grid -->
+    <div class="product-grid" id="product-grid"></div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       BUSCAR
+  ══════════════════════════════════════════ -->
+  <section id="search" class="page">
+    <div class="page-header">
+      <h1>Buscar en el Menú</h1>
+    </div>
+    <div class="search-input-wrap">
+      <span class="ico">🔍</span>
+      <input
+        type="text"
+        id="search-input"
+        placeholder="Buscar hamburguesas, hot dogs, nachos…"
+        oninput="handleSearch(this.value)"
+      />
+    </div>
+    <div class="search-count" id="search-count"></div>
+    <div class="product-grid" id="search-grid" style="margin-top:12px"></div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       CARRITO
+  ══════════════════════════════════════════ -->
+  <section id="cart" class="page">
+    <div class="page-header">
+      <h1>Mi Carrito</h1>
+    </div>
+
+    <!-- Empty state -->
+    <div class="cart-empty" id="cart-empty">
+      <div class="big-icon">🛍️</div>
+      <h2>Tu carrito está vacío</h2>
+      <p>Aún no has agregado nada.</p>
+      <button class="btn-primary" onclick="navigate('home')">Ver Menú</button>
+    </div>
+
+    <!-- Cart with items -->
+    <div id="cart-full" style="display:none">
+      <div class="cart-items" id="cart-items-list"></div>
+
+      <div class="checkout-box glass">
+        <h3>Confirmar Pedido</h3>
+
+        <label class="form-label">Nombre para el pedido</label>
+        <input class="form-input" id="order-name" type="text" placeholder="Ej. Juan Pérez" />
+
+        <label class="form-label">Método de pago</label>
+
+        <!-- Active payments -->
+        <div class="pay-grid">
+          <button class="pay-btn selected" id="pay-card" onclick="selectPay('card')">
+            💳 Tarjeta
+          </button>
+          <button class="pay-btn" id="pay-cash" onclick="selectPay('cash')">
+            💵 Efectivo
+          </button>
+        </div>
+
+        <!-- Coming soon -->
+        <div class="pronto-label">Próximamente</div>
+        <div class="pay-grid-soon">
+          <div class="pay-soon">
+            <div class="pay-logo" style="background:#da2128">OXXO</div>
+            <div class="pay-name">OXXO Pay</div>
+            <span class="pronto-badge">PRONTO</span>
+          </div>
+          <div class="pay-soon">
+            <div class="pay-logo" style="background:#006847">SPEI</div>
+            <div class="pay-name">SPEI</div>
+            <span class="pronto-badge">PRONTO</span>
+          </div>
+          <div class="pay-soon">
+            <div class="pay-logo" style="background:#009ee3">MP</div>
+            <div class="pay-name">Mercado Pago</div>
+            <span class="pronto-badge">PRONTO</span>
+          </div>
+        </div>
+
+        <!-- Totals -->
+        <div class="order-summary">
+          <div class="summary-row"><span>Subtotal</span><span id="summary-sub">$0</span></div>
+          <div class="summary-row"><span>IVA (8%)</span><span id="summary-tax">$0</span></div>
+          <div class="summary-total">
+            <span>Total</span>
+            <span class="total-amount" id="summary-total">$0</span>
+          </div>
+        </div>
+
+        <button class="btn-order" id="btn-order" onclick="placeOrder()">
+          Hacer Pedido &nbsp;→
+        </button>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       PEDIDOS
+  ══════════════════════════════════════════ -->
+  <section id="orders" class="page">
+    <div class="page-header">
+      <h1>Mis Pedidos</h1>
+    </div>
+
+    <div id="orders-empty" class="cart-empty">
+      <div class="big-icon">🕐</div>
+      <h2>Sin pedidos aún</h2>
+      <p>Cuando hagas un pedido aparecerá aquí.</p>
+    </div>
+
+    <div class="orders-list" id="orders-list"></div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════
+       PERFIL
+  ══════════════════════════════════════════ -->
+  <section id="profile" class="page">
+    <div class="page-header">
+      <h1>Mi Perfil</h1>
+    </div>
+
+    <div class="profile-content">
+      <div class="profile-hero glass">
+        <div class="profile-avatar">🌮</div>
+        <h2>Invitado</h2>
+        <p>¿Listo para los mejores sabores de la calle?</p>
+      </div>
+
+      <button class="profile-option" onclick="navigate('orders')">
+        <div class="profile-option-icon" style="background:rgba(212,168,67,.15)">⭐</div>
+        <div class="profile-option-text">
+          <h3>Mis Pedidos</h3>
+          <p>Ver historial de pedidos</p>
+        </div>
+      </button>
+
+      <button class="profile-option">
+        <div class="profile-option-icon" style="background:rgba(232,93,40,.15)">📍</div>
+        <div class="profile-option-text">
+          <h3>Dirección de Entrega</h3>
+          <p>Agregar o editar dirección</p>
+        </div>
+      </button>
+
+      <button class="profile-option">
+        <div class="profile-option-icon" style="background:rgba(34,197,94,.15)">📞</div>
+        <div class="profile-option-text">
+          <h3>Teléfono de Contacto</h3>
+          <p>Agregar número de teléfono</p>
+        </div>
+      </button>
+
+      <button class="profile-option">
+        <div class="profile-option-icon" style="background:rgba(250,200,60,.15)">🎁</div>
+        <div class="profile-option-text">
+          <h3>Promociones</h3>
+          <p>Ver ofertas y descuentos activos</p>
+        </div>
+      </button>
+
+      <div class="profile-info">
+        <div class="brand">LA <em>Esquina</em></div>
+        <small>Menú Demo · Comida Callejera Premium · v1.0</small>
+      </div>
+    </div>
+  </section>
+
+</div><!-- /#app -->
+
+
+<!-- ── BOTTOM NAV ─────────────────────────────── -->
+<div id="bottom-nav">
+  <nav class="nav-inner">
+    <button class="nav-item active" data-page="home" onclick="navigate('home')">
+      <span class="nav-dot"></span>
+      <span class="nav-icon">🏠</span>
+      <span>Inicio</span>
+    </button>
+    <button class="nav-item" data-page="search" onclick="navigate('search')">
+      <span class="nav-dot"></span>
+      <span class="nav-icon">🔍</span>
+      <span>Buscar</span>
+    </button>
+    <button class="nav-item" data-page="cart" onclick="navigate('cart')">
+      <span class="nav-dot"></span>
+      <span class="nav-icon">🛍️</span>
+      <span id="nav-cart-label">Carrito</span>
+      <span class="cart-badge" id="cart-badge"></span>
+    </button>
+    <button class="nav-item" data-page="orders" onclick="navigate('orders')">
+      <span class="nav-dot"></span>
+      <span class="nav-icon">🕐</span>
+      <span>Pedidos</span>
+    </button>
+    <button class="nav-item" data-page="profile" onclick="navigate('profile')">
+      <span class="nav-dot"></span>
+      <span class="nav-icon">👤</span>
+      <span>Perfil</span>
+    </button>
+  </nav>
+</div>
+
+<!-- ── TOAST ─────────────────────────────────── -->
+<div id="toast"></div>
+
+<script src="script.js"></script>
+</body>
+</html>
